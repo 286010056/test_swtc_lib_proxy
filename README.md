@@ -1,0 +1,2 @@
+# test_swtc_lib_proxy
+用于测试swtc_lib和swtc_proxy
