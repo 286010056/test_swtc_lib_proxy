@@ -169,7 +169,7 @@
 
 ## swtc-transaction
 
-> 描述： 提井通公链交易库, 支付/挂单/关系/合约
+> 描述： 提井通公链交易库, 支付/挂单/关系/合约。交易挂单方面的各种验证之类的。
 
 ### 主要依赖
 
@@ -179,7 +179,7 @@
 
 ### 测试情况
 
-1. test passing 100%
+1. test passing 75%
 
 * test_multisign 2 passing 100% (测试多重签名)
   * [X] ~~*multiSigning*~~ [2020-01-06]
@@ -200,6 +200,9 @@
   * [X] ~~*getTransactionType*~~ [2020-01-06]
   * [X] ~~*...*~~ [2020-01-06]
 
+* api_test_transaction false 0% 
+   * 404错误，请求的服务器404，这个是调用的井通api应该问题不大。不清楚这里的测试用例是否失效了。
+
 ### 问题以及建议
 
 1. 编译问题，直接执行 tsc 命令报错，推断是跨平台的兼容性没有处理。需要手动执行 tsc 并把 local_sign.js 复制到 src目录下。建议在tssrc下面的文件都是ts，并且修改下package.json里面相关的命令。
@@ -209,4 +212,41 @@
    2. remote.connectPromise
    3. remote.buildPaymentTx.signPromise
 4. tssrc/transaction.ts 第1101行，链上的memo的最大长度等于1019个字节，需要先转换为buffer计算长度，中文算3个字节，这里是大于2048才会超出。请检查是否有误。相关的测试用例 test_transaction 第124行，也需要进行相应的修改。
-5. 
+5. api_test_transaction.js 这个文件下面使用的是井通API，测试不通过，不知道还有没有在用。
+
+
+
+## swtc-api
+
+> 描述： 对jingtum-api 作出包装， 消除不安全操作 并且提供类似swtc-lib的接口支持jingtum-api缺失的操作
+
+### 主要依赖
+
+1. swtc-transaction
+2. axios
+
+### 测试情况
+
+1. test passing 50%
+
+* test_remote 0% (接口相关的测试)
+  * [X] ~~*constructor*~~ [2020-01-06]
+  * [ ] local sign 语法错误，逻辑正确。看情况是否修改,如需修改建议代码为:
+    ```
+      expect(error.response.data.message).to.equal("Transaction length invalid")
+    ```
+  * [ ] getLedger data.success 无此属性。
+  * [ ] 下面不继续测试此脚本，使用接口测试的方案进行测试，
+  
+1. service test passing 100%
+   * [X] ~~*创建钱包*~~ [2020-01-07]
+   * [X] ~~*根据私钥创建钱包*~~ [2020-01-07]
+   * [X] ~~*获取余额*~~ [2020-01-07]
+   * [X] ~~*获得账号支付信息*~~ [2020-01-07]
+   * [X] ~~*...*~~ [2020-01-07]
+
+### 问题以及建议
+
+1. 测试用例里面，有些语法错误，不能捕获该有的错误。
+2. 分页的说明文档不是太详细，用法没有实例，在获取账号的支付记录按照文档说明传入值的时候，只想查询一条记录，却反悔了全部的13条记录，这个待考证。
+3. 设置挂单佣金可以成功，但是具体的帮助文档可以写的详细一点，在井畅SWTC公链浏览器上差不多具体的交易hash代表的意思，在井通浏览器上可以查到。
