@@ -1,6 +1,79 @@
 # test_swtc_lib_proxy
-用于测试swtc_lib和swtc_proxy
 
+说明：此文档用于帮助审计 swtc_lib swtc_lib依赖的底层关系库 和 swtc_proxy 等相关的依赖库的代码。
+
+此文档只做参考使用
+
+## 目录
+
+<!-- TOC -->
+
+- [test_swtc_lib_proxy](#testswtclibproxy)
+  - [目录](#%e7%9b%ae%e5%bd%95)
+  - [进度说明](#%e8%bf%9b%e5%ba%a6%e8%af%b4%e6%98%8e)
+  - [依赖图系（进行中）](#%e4%be%9d%e8%b5%96%e5%9b%be%e7%b3%bb%e8%bf%9b%e8%a1%8c%e4%b8%ad)
+  - [swtc-chains](#swtc-chains)
+    - [主要依赖](#%e4%b8%bb%e8%a6%81%e4%be%9d%e8%b5%96)
+    - [测试情况](#%e6%b5%8b%e8%af%95%e6%83%85%e5%86%b5)
+    - [问题以及建议](#%e9%97%ae%e9%a2%98%e4%bb%a5%e5%8f%8a%e5%bb%ba%e8%ae%ae)
+  - [swtc-address-codec](#swtc-address-codec)
+    - [主要依赖](#%e4%b8%bb%e8%a6%81%e4%be%9d%e8%b5%96-1)
+    - [测试情况](#%e6%b5%8b%e8%af%95%e6%83%85%e5%86%b5-1)
+    - [问题以及建议](#%e9%97%ae%e9%a2%98%e4%bb%a5%e5%8f%8a%e5%bb%ba%e8%ae%ae-1)
+  - [swtc-keypairs](#swtc-keypairs)
+    - [主要依赖](#%e4%b8%bb%e8%a6%81%e4%be%9d%e8%b5%96-2)
+    - [测试情况](#%e6%b5%8b%e8%af%95%e6%83%85%e5%86%b5-2)
+    - [问题以及建议](#%e9%97%ae%e9%a2%98%e4%bb%a5%e5%8f%8a%e5%bb%ba%e8%ae%ae-2)
+  - [swtc-factory](#swtc-factory)
+    - [主要依赖](#%e4%b8%bb%e8%a6%81%e4%be%9d%e8%b5%96-3)
+    - [测试情况](#%e6%b5%8b%e8%af%95%e6%83%85%e5%86%b5-3)
+    - [问题以及建议](#%e9%97%ae%e9%a2%98%e4%bb%a5%e5%8f%8a%e5%bb%ba%e8%ae%ae-3)
+  - [swtc-Wallet](#swtc-wallet)
+    - [主要依赖](#%e4%b8%bb%e8%a6%81%e4%be%9d%e8%b5%96-4)
+    - [测试情况](#%e6%b5%8b%e8%af%95%e6%83%85%e5%86%b5-4)
+    - [问题以及建议](#%e9%97%ae%e9%a2%98%e4%bb%a5%e5%8f%8a%e5%bb%ba%e8%ae%ae-4)
+  - [swtc-utils](#swtc-utils)
+    - [主要依赖](#%e4%b8%bb%e8%a6%81%e4%be%9d%e8%b5%96-5)
+    - [测试情况](#%e6%b5%8b%e8%af%95%e6%83%85%e5%86%b5-5)
+    - [问题以及建议](#%e9%97%ae%e9%a2%98%e4%bb%a5%e5%8f%8a%e5%bb%ba%e8%ae%ae-5)
+  - [swtc-serializer](#swtc-serializer)
+    - [主要依赖](#%e4%b8%bb%e8%a6%81%e4%be%9d%e8%b5%96-6)
+    - [测试情况](#%e6%b5%8b%e8%af%95%e6%83%85%e5%86%b5-6)
+    - [问题以及建议](#%e9%97%ae%e9%a2%98%e4%bb%a5%e5%8f%8a%e5%bb%ba%e8%ae%ae-6)
+  - [swtc-transaction](#swtc-transaction)
+    - [主要依赖](#%e4%b8%bb%e8%a6%81%e4%be%9d%e8%b5%96-7)
+    - [测试情况](#%e6%b5%8b%e8%af%95%e6%83%85%e5%86%b5-7)
+    - [问题以及建议](#%e9%97%ae%e9%a2%98%e4%bb%a5%e5%8f%8a%e5%bb%ba%e8%ae%ae-7)
+  - [swtc-api](#swtc-api)
+    - [主要依赖](#%e4%b8%bb%e8%a6%81%e4%be%9d%e8%b5%96-8)
+    - [测试情况](#%e6%b5%8b%e8%af%95%e6%83%85%e5%86%b5-8)
+    - [问题以及建议](#%e9%97%ae%e9%a2%98%e4%bb%a5%e5%8f%8a%e5%bb%ba%e8%ae%ae-8)
+
+<!-- /TOC -->
+
+## 进度说明
+
+> 描述：此文档还在持续更新中，暂时还没有测试完毕。结果以更新完毕的文档为准。
+
+* [X] ~~*swtc-chains*~~ [2020-01-08]
+* [X] ~~*swtc-address-codec*~~ [2020-01-08]
+* [X] ~~*swtc-keypairs*~~ [2020-01-08]
+* [X] ~~*swtc-factory*~~ [2020-01-08]
+* [X] ~~*swtc-Wallet*~~ [2020-01-08]
+* [X] ~~*swtc-utils*~~ [2020-01-08]
+* [X] ~~*swtc-serializer*~~ [2020-01-08]
+* [X] ~~*swtc-transaction*~~ [2020-01-08]
+* [ ] swtc-api 80%
+* [ ] swtc-lib
+* [ ] swtc-x-lib
+* [ ] swtc-proxy
+* [ ] swtc-nativescript
+
+## 依赖图系（进行中）
+
+> 说明：在测试和审计过程中，整理了一下依赖关系图。有助于理解相互之间的关系，此图还在继续完善中。
+
+![SWTCLIB-依赖关系](src/images/SWTCLIB-依赖关系.png)
 
 ## swtc-chains
 
@@ -249,4 +322,4 @@
 
 1. 测试用例里面，有些语法错误，不能捕获该有的错误。
 2. 分页的说明文档不是太详细，用法没有实例，在获取账号的支付记录按照文档说明传入值的时候，只想查询一条记录，却反悔了全部的13条记录，这个待考证。
-3. 设置挂单佣金可以成功，但是具体的帮助文档可以写的详细一点，在井畅SWTC公链浏览器上差不多具体的交易hash代表的意思，在井通浏览器上可以查到。
+3. 设置挂单佣金可以成功，但是具体的帮助文档可以写的详细一点，在井畅SWTC公链浏览器上差不到具体的交易hash，在井通浏览器上可以查到。
