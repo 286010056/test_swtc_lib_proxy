@@ -10,6 +10,7 @@
 
 - [test_swtc_lib_proxy](#test_swtc_lib_proxy)
   - [目录](#目录)
+  - [测试工具](#测试工具)
   - [进度说明](#进度说明)
   - [依赖图系（进行中）](#依赖图系进行中)
   - [swtc-chains](#swtc-chains)
@@ -50,6 +51,14 @@
     - [问题以及建议](#问题以及建议-8)
 
 <!-- /TOC -->
+
+## 测试工具
+
+  * vscode debug
+  * 源码解读
+  * mocha
+  * express 服务器写 demo
+  * postman
 
 ## 进度说明
 
