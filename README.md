@@ -76,10 +76,11 @@
 * [X] ~~*swtc-serializer*~~ [2020-01-08]
 * [X] ~~*swtc-transaction*~~ [2020-01-08]
 * [X] ~~*swtc-api*~~ [2020-01-09]
-* [ ] swtc-lib 进行中
-* [ ] swtc-x-lib
-* [ ] swtc-proxy
-* [ ] swtc-nativescript
+* [X] ~~*swtc-lib*~~ [2020-01-09]
+* [X] ~~*swtc-nativescript*~~ [2020-01-09]
+* [ ] swtc-proxy进行中
+* [ ] swtc-x-lib 
+
 
 ## 依赖图系（进行中）
 
@@ -433,8 +434,8 @@
 
 #### 真实调用测试
 
-[基础相关代码]()
-[多重签名相关测试代码]()
+[基础相关代码](https://github.com/zhaitianye/test_swtc_lib_proxy/tree/master/src/t-swtc-lib/default)
+[多重签名相关测试代码](https://github.com/zhaitianye/test_swtc_lib_proxy/tree/master/src/t-swtc-lib/Multiple-signature)
 
 1. test passing 100%
   * [X] ~~*创建钱包*~~ [2020-01-09]
