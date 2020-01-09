@@ -85,7 +85,7 @@
 
 > 说明：在测试和审计过程中，整理了一下依赖关系图。有助于理解相互之间的关系，此图还在继续完善中。
 
-![SWTCLIB-依赖关系](src/images/SWTCLIB-依赖关系.png)
+![SWTCLIB-依赖关系](src/images/SWTCLIB-依赖关系.jpg)
 
 ## swtc-chains
 
@@ -370,3 +370,95 @@
 ### 测试结果
 
 通过
+
+## swtc-lib
+
+> 描述： SWTC公链库, 基于websocket,直接和公链通讯，提供相对完善的功能
+
+### 主要依赖
+
+1. swtc-transaction
+2. swtc-utils
+3. swtc-nativescript
+4. ws
+
+### 测试情况
+
+#### 单元测试
+
+1. test test_account 100% (账户相关的测试)
+  * [X] ~~*constructor*~~ [2020-01-09]
+  * [X] ~~*transactions event*~~ [2020-01-09]
+  * [X] ~~*transactions event*~~ [2020-01-09]
+  * [X] ~~*test removeListener*~~ [2020-01-09]
+
+2. test test_multisign 100% (多重签名相关)
+  * [X] ~~*multiSigning*~~ [2020-01-09]
+  * [X] ~~*buildMultisignedTx*~~ [2020-01-09]
+
+3. test test_multisign 100% (挂单相关)
+  * [X] ~~*constructor*~~ [2020-01-09]
+  * [X] ~~*transaction event*~~ [2020-01-09]
+  * [X] ~~*newListener*~~ [2020-01-09]
+  * [X] ~~*removeListener*~~ [2020-01-09]
+
+4. test test_remote_additional 100% (远程方法相关)
+  * [X] ~~*makeCurrency*~~ [2020-01-09]
+  * [X] ~~*makeAmount*~~ [2020-01-09]
+  * [X] ~~*newListener*~~ [2020-01-09]
+  * [X] ~~*removeListener*~~ [2020-01-09]
+
+4. test test_remote passing 90.6% (实用方法相关)
+  * [X] ~~*constructor*~~ [2020-01-09]
+  * [X] ~~*_updateServerStatus*~~ [2020-01-09]
+  * [X] ~~*requestServerInfo*~~ [2020-01-09]
+  * [X] ~~*requestPeers*~~ [2020-01-09]
+  * [ ] requestTx -- pending
+  * [ ] requestOrderBook  -- pending
+  * [X] ~~*...*~~ [2020-01-09]
+
+5. test test_server passing 88% (服务相关)
+  * [ ] server 28 行、29 行，url 多了一个/ 测试不过 (严重性未知，应该是个小问题)，下面的几个测试用例雷同，都是多了个/的问题，可以看一下。
+  * [X] ~~*sendMessage*~~ [2020-01-09]
+  * [X] ~~*_handleClose*~~ [2020-01-09]
+  * [X] ~~*_setState*~~ [2020-01-09]
+  * [X] ~~*connect*~~ [2020-01-09]
+
+6. test test_transaction_additional passing 100% (事务相关)
+  * [X] ~~*build payment transaction*~~ [2020-01-09]
+  * [X] ~~*build offer create transaction*~~ [2020-01-09]
+  * [X] ~~*build offer cancel transaction*~~ [2020-01-09]
+  * [X] ~~*relation transaction*~~ [2020-01-09]
+  * [X] ~~*.signPromise()*~~ [2020-01-09]
+
+#### 真实调用测试
+
+[基础相关代码]()
+[多重签名相关测试代码]()
+
+1. test passing 100%
+  * [X] ~~*创建钱包*~~ [2020-01-09]
+  * [X] ~~*创建 Remote 对象*~~ [2020-01-09]
+  * [X] ~~*创建连接*~~ [2020-01-09]
+  * [X] ~~*请求底层服务器信息*~~ [2020-01-09]
+  * [X] ~~*获取最新账本信息*~~ [2020-01-09]
+  * [X] ~~*获取某一账本具体信息*~~ [2020-01-09]
+  * [X] ~~*查询某一交易具体信息*~~ [2020-01-09]
+  * [X] ~~*请求账号信息*~~ [2020-01-09]
+  * [X] ~~*获得账号可接收和发送的货币*~~ [2020-01-09]
+  * [X] ~~*获得账号关系*~~ [2020-01-09]
+  * [X] ~~*获得账号挂单*~~ [2020-01-09]
+  * [X] ~~*...*~~ [2020-01-09]
+
+
+### 问题以及建议
+
+1. 建议：在本地签名的时候，创建了一个 remote, remote会配置一个地址，在手动设置 setSequence 方法后，即使地址是错误的。也可以签名成功，减少了对服务器的请求，做到了完全本地。这条是否应该在文档里面做下说明。
+2. 建议：在本地签名的时候，如果在签名的时候没有手动设置sequence这个值，则会去服务器多发一次请求去拿sequence。这里是否要做下策略上的改变，只是从链接配置的ws服务器上读取sequence,配置的服务器的sequence挂了就读取不到，不允许继续签名。这样可以减少对外部api服务器的依赖。这里的从服务器读取sequence的多重方式为：
+  1. requestAccountInfo 请求账户基本信息里面的sequence
+  2. getAccountSequence 请求账户sequence
+  3. getAccountBalances 请求账户余额里面的sequence
+  4. axios 里面默认url地址里面的sequence
+  5. api.jingtum.com 发送ajax去请求sequence
+3. 创建Remote对象，包含参数 local_sign 是否需要在文档上做出说明。
+4. swtc-lib库中依赖了swtc-nativescript，应在文档中介绍此库做的主要内容，看了下内容应该是ws的一些封装的工具类库。
