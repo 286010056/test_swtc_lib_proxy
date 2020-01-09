@@ -86,7 +86,7 @@
 
 > 说明：在测试和审计过程中，整理了一下依赖关系图。有助于理解相互之间的关系，此图还在继续完善中。
 
-![SWTCLIB-依赖关系](src/images/SWTCLIB-依赖关系.jpg)
+![SWTCLIB-依赖关系](src/images/relationship.jpg)
 
 ## swtc-chains
 
