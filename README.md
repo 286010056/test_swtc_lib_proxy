@@ -352,7 +352,7 @@
   * [ ] getLedger data.success 无此属性。
   * [ ] 下面不继续测试此脚本，使用接口测试的方案进行测试，
   
-1. service test passing 100% [示例代码]()
+1. service test passing 100% [示例代码](https://github.com/zhaitianye/test_swtc_lib_proxy/tree/master/src/t-swtc-api)
    * [X] ~~*创建钱包*~~ [2020-01-07]
    * [X] ~~*根据私钥创建钱包*~~ [2020-01-07]
    * [X] ~~*获取余额*~~ [2020-01-07]
