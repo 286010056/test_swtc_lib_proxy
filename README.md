@@ -18,38 +18,53 @@
     - [主要依赖](#主要依赖)
     - [测试情况](#测试情况)
     - [问题以及建议](#问题以及建议)
+    - [测试结果](#测试结果)
   - [swtc-address-codec](#swtc-address-codec)
     - [主要依赖](#主要依赖-1)
     - [测试情况](#测试情况-1)
     - [问题以及建议](#问题以及建议-1)
+    - [测试结果](#测试结果-1)
   - [swtc-keypairs](#swtc-keypairs)
     - [主要依赖](#主要依赖-2)
     - [测试情况](#测试情况-2)
     - [问题以及建议](#问题以及建议-2)
+    - [测试结果](#测试结果-2)
   - [swtc-factory](#swtc-factory)
     - [主要依赖](#主要依赖-3)
     - [测试情况](#测试情况-3)
     - [问题以及建议](#问题以及建议-3)
+    - [测试结果](#测试结果-3)
   - [swtc-Wallet](#swtc-wallet)
     - [主要依赖](#主要依赖-4)
     - [测试情况](#测试情况-4)
     - [问题以及建议](#问题以及建议-4)
+    - [测试结果](#测试结果-4)
   - [swtc-utils](#swtc-utils)
     - [主要依赖](#主要依赖-5)
     - [测试情况](#测试情况-5)
     - [问题以及建议](#问题以及建议-5)
+    - [测试结果](#测试结果-5)
   - [swtc-serializer](#swtc-serializer)
     - [主要依赖](#主要依赖-6)
     - [测试情况](#测试情况-6)
     - [问题以及建议](#问题以及建议-6)
+    - [测试结果](#测试结果-6)
   - [swtc-transaction](#swtc-transaction)
     - [主要依赖](#主要依赖-7)
     - [测试情况](#测试情况-7)
     - [问题以及建议](#问题以及建议-7)
-  - [swtc-api（进行中）](#swtc-api进行中)
+    - [测试结果](#测试结果-7)
+  - [swtc-api](#swtc-api)
     - [主要依赖](#主要依赖-8)
     - [测试情况](#测试情况-8)
     - [问题以及建议](#问题以及建议-8)
+    - [测试结果](#测试结果-8)
+  - [swtc-lib](#swtc-lib)
+    - [主要依赖](#主要依赖-9)
+    - [测试情况](#测试情况-9)
+      - [单元测试](#单元测试)
+      - [真实调用测试](#真实调用测试)
+    - [问题以及建议](#问题以及建议-9)
 
 <!-- /TOC -->
 
@@ -78,7 +93,7 @@
 * [X] ~~*swtc-api*~~ [2020-01-09]
 * [X] ~~*swtc-lib*~~ [2020-01-09]
 * [X] ~~*swtc-nativescript*~~ [2020-01-09]
-* [ ] swtc-proxy进行中
+* [X] ~~*swtc-proxy*~~ [2020-01-09]
 * [ ] swtc-x-lib 
 
 
@@ -86,7 +101,7 @@
 
 > 说明：在测试和审计过程中，整理了一下依赖关系图。有助于理解相互之间的关系，此图还在继续完善中。
 
-![SWTCLIB-依赖关系](src/images/relationship.jpg)
+![SWTCLIB-依赖关系](src/images/relationship.png)
 
 ## swtc-chains
 
@@ -319,12 +334,8 @@
 
 1. 编译问题，直接执行 tsc 命令报错，推断是跨平台的兼容性没有处理。需要手动执行 tsc 并把 local_sign.js 复制到 src目录下。建议在tssrc下面的文件都是ts，并且修改下package.json里面相关的命令。
 2. 疑问：test/test_transaction_additional.js 文件78行、109行、等，交易和挂单方面的接口是否使用了 https://tapi.jingtum.com 的接口
-3. 【属于 SWTC-LIB】在lib库的文档里面，本地签名的步骤如下：（可否不连接服务器，在本地直接进行签名，因为有些需求是需要断网进行签名。若有，建议在文档里面写出具体操作，本地签名单独的lib调用示例也建议在文档内标识出来。）
-   1. remote = new Remote({server, issuer})
-   2. remote.connectPromise
-   3. remote.buildPaymentTx.signPromise
-4. tssrc/transaction.ts 第1101行，链上的memo的最大长度等于1019个字节，需要先转换为buffer计算长度，中文算3个字节，这里是大于2048才会超出。请检查是否有误。相关的测试用例 test_transaction 第124行，也需要进行相应的修改。
-5. api_test_transaction.js 这个文件下面使用的是井通API，测试不通过，不知道还有没有在用。
+3. tssrc/transaction.ts 第1101行，链上的memo的最大长度等于1019个字节，需要先转换为buffer计算长度，中文算3个字节，这里是大于2048才会超出。请检查是否有误。相关的测试用例 test_transaction 第124行，也需要进行相应的修改。
+4. api_test_transaction.js 这个文件下面使用的是井通API，测试不通过，不知道还有没有在用。
 
 ### 测试结果
 
@@ -456,10 +467,50 @@
 
 1. 建议：在本地签名的时候，创建了一个 remote, remote会配置一个地址，在手动设置 setSequence 方法后，即使地址是错误的。也可以签名成功，减少了对服务器的请求，做到了完全本地。这条是否应该在文档里面做下说明。
 2. 建议：在本地签名的时候，如果在签名的时候没有手动设置sequence这个值，则会去服务器多发一次请求去拿sequence。这里是否要做下策略上的改变，只是从链接配置的ws服务器上读取sequence,配置的服务器的sequence挂了就读取不到，不允许继续签名。这样可以减少对外部api服务器的依赖。这里的从服务器读取sequence的多重方式为：
-  1. requestAccountInfo 请求账户基本信息里面的sequence
-  2. getAccountSequence 请求账户sequence
-  3. getAccountBalances 请求账户余额里面的sequence
-  4. axios 里面默认url地址里面的sequence
-  5. api.jingtum.com 发送ajax去请求sequence
-3. 创建Remote对象，包含参数 local_sign 是否需要在文档上做出说明。
+   1. requestAccountInfo 请求账户基本信息里面的sequence
+   2. getAccountSequence 请求账户sequence
+   3. getAccountBalances 请求账户余额里面的sequence
+   4. axios 里面默认url地址里面的sequence
+   5. api.jingtum.com 发送ajax去请求sequence
+3. 创建Remote对象，包含参数 local_sign(这里推测是本地的意思) 是否需要在文档上做出说明。
 4. swtc-lib库中依赖了swtc-nativescript，应在文档中介绍此库做的主要内容，看了下内容应该是ws的一些封装的工具类库。
+
+### 测试结果
+
+通过
+
+## swtc-proxy
+
+> 描述： swtc-proxy提供REST服务，代理到井通节点
+
+### 主要依赖
+
+1. swtc-lib
+2. swtc-utils
+
+### 测试情况
+
+#### 单元测试
+
+1. 代码审计 100%
+2. 白盒测试 100%
+3. 功能性测试 100%
+
+
+### 问题以及建议
+
+1. 启动配置做兼容性写法，在 win 平台上直接启动不成功，建议修改package.json的启动命令，支持mac和win平台。
+2. 返回值没有成功或者失败的标识，只有code和message，建议添加一个sucess
+3. 查询账户余额
+  1. 返回的value值类型不统一
+  2. 返回的value值小数位数不统一
+  3. 可选参数 ledger 的允许值不为文档上所描述的 validated, closed, current, 14530000,只能传递账本号
+4. 查询用户的支付记录，建议添加limit标识，目前都是返回200条，看代码里面是只返回接收和发送的记录，如果有挂单的，则返回的条数不能固定。这个建议想一个策略限制下。
+5. 查询账户事务记录，marker参数无效,建议验证一下。
+6. 查询账本的时候，没有参数说明可以查询到账本下面的交易hash
+7. 提交多签过的事务在文档里面没有参数的说明
+8. 查询挂单列表有limit限制，但是没有分页,不知道rpc内部有无此功能
+
+### 测试结果
+
+通过
